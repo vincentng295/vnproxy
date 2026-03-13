@@ -67,8 +67,21 @@ driver.get("https://icanhazip.com") # Kiểm tra IP hiện tại
 
 ```
 
-## 📊 Cấu trúc dữ liệu chi tiết
+### 4. Kiểm tra Proxy còn sống (Check Alive)
+Do proxy miễn phí hay bị die, bạn nên dùng hàm `check_alive` để lọc:
 
+```python
+proxy_tool = VietnamProxy().fetch()
+
+# Kiểm tra đa luồng các proxy còn sống, phản hồi dưới 3 giây
+proxy_tool.check_alive(timeout=3, max_workers=15)
+
+# Chỉ lấy những proxy đã qua kiểm tra
+safe_proxy = proxy_tool.get_random(only_alive=True)
+
+```
+
+## 📊 Cấu trúc dữ liệu chi tiết
 Nếu bạn muốn lấy thông tin sâu hơn (như ISP, Thành phố), bạn có thể truy cập trực tiếp vào thuộc tính ẩn:
 
 ```python
