@@ -30,11 +30,11 @@ class VietnamProxy:
         try:
             # Kiểm tra bằng cách gọi tới một endpoint nhẹ
             response = requests.get(
-                "https://httpbin.org/ip", 
+                "https://www.gstatic.com/generate_204", 
                 proxies=proxies, 
                 timeout=timeout
             )
-            if response.status_code == 200:
+            if response.status_code == 204:
                 return proxy_url
         except:
             return None
