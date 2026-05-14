@@ -63,7 +63,7 @@ class VietnamProxy:
         print(f"[vn-proxy] Found {len(alive_results)} alive proxies.")
         return alive_results
 
-    def get_all(self, protocol=None, only_alive=False):
+    def get_all(self, protocol=None, only_alive=False, blacklist=None):
         """Lấy danh sách proxy"""
         if only_alive and self._alive_proxies:
             source = [{"proxy": p, "protocol": p.split('://')[0]} for p in self._alive_proxies]
@@ -71,12 +71,22 @@ class VietnamProxy:
             if not self._proxies_data:
                 self.fetch()
             source = self._proxies_data
-        
+
+        if blacklist:
+            # blacklist là danh sách IP hoặc CIDR cần loại trừ
+            # [ "1.2.3.4", "5.6.7.8", ... ]
+            def is_excluded(ip):
+                if ip in blacklist:
+                    return True
+                return False
+
+            source = [p for p in source if not is_excluded(p.get('ip', ''))]
+
         if protocol:
             return [p['proxy'] for p in source if p.get('protocol') == protocol.lower()]
         return [p['proxy'] for p in source]
 
-    def get_random(self, protocol=None, only_alive=False):
+    def get_random(self, protocol=None, only_alive=False, blacklist=None):
         """Lấy 1 proxy ngẫu nhiên (ưu tiên loại còn sống nếu only_alive=True)"""
-        proxies = self.get_all(protocol, only_alive=only_alive)
+        proxies = self.get_all(protocol, only_alive=only_alive, blacklist=blacklist)
         return random.choice(proxies) if proxies else None
